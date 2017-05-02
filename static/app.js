@@ -160,7 +160,7 @@ var timesched = angular
       var formattedTokens = ptr.format('H|mm|LLLL (z)|ddd|DD|MMM').split(/\|/);
       this.timeCells.push({
         hour: parseInt(formattedTokens[0], 10),
-        hourFormat: formattedTokens[0],
+        hourFormat: ptr.format('h'),
         minute: parseInt(formattedTokens[1], 10),
         minuteFormat: formattedTokens[1],
         isWeekend: isWeekend(this.weekendInfo, ptr.day()),
@@ -199,7 +199,9 @@ var timesched = angular
     var oldM = this.clockMinute;
     var oldD = this.clockDay;
     this.clockHour = now.format('H');
+    this.clockHourFormat = now.format('h');
     this.clockMinute = now.format('mm');
+    this.clockAMPM = now.format('a');
     this.clockDay = now.format('ddd, DD MMM');
     return this.clockHour !== oldH || this.clockMinute !== oldM ||
       this.clockDay != oldD;
@@ -215,7 +217,7 @@ var timesched = angular
     $scope.homeZone = null;
     $scope.currentZone = null;
     $scope.ready = false;
-    $scope.timeRange = [600, 1020];
+    $scope.timeRange = [600, 660];
     $scope.scheduleMeeting = false;
     $scope.meetingSummary = '';
     $scope.markWeekends = loadFromStorage('markWeekends', true);
@@ -231,11 +233,11 @@ var timesched = angular
     // step increment when the meta key is pressed.
     uiSliderConfig.min = 0;
     uiSliderConfig.max = 1440;
-    uiSliderConfig.step = 15;
+    uiSliderConfig.step = 30;
     uiSliderConfig.range = true;
     uiSliderConfig.slide = function(event, ui) {
       var smallStep = event.metaKey || event.altKey || event.shiftKey;
-      $(ui.handle).parent().slider({step: smallStep ? 5 : 15});
+      $(ui.handle).parent().slider({step: smallStep ? 5 : 30});
       // because we're not saving the state we manually want to update
       // the meeting summary here.
       $scope.updateMeetingSummary();

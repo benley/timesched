@@ -11,20 +11,20 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 a {
-    color: #388F58;
+    color: #428bca;
     text-decoration: none;
 }
 
 a:hover,
 a:focus {
-    color: #2A7546;
+    color: #2A6496;
     text-decoration: underline;
 }
 
 .navbar {
     border: none;
     border-radius: 0;
-    background: #388F58;
+    background: #428bca;
 }
 
 .navbar-default .navbar-nav > li > a,
@@ -38,7 +38,7 @@ a:focus {
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
     color: white;
-    background-color: #2A7546;
+    background-color: #2A6496;
 }
 
 .navbar-default .navbar-nav > .dropdown > a .caret,
@@ -63,7 +63,7 @@ a:focus {
 .form-control, .btn {
     border-radius: 0;
     box-shadow: none;
-    border: 1px solid #2A7546;
+    border: 1px solid #2A6496;
 }
 
 .btn {
@@ -81,7 +81,7 @@ a:focus {
 
 .btn-default.disabled,
 .btn-default[disabled] {
-    border-color: #2A7546;
+    border-color: #2A6496;
 }
 
 .form-control:focus {
@@ -101,7 +101,7 @@ a:focus {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
     color: #ffffff;
-    background-color: #388F58;
+    background-color: #428bca;
 }
 
 .tooltip {
@@ -110,23 +110,23 @@ a:focus {
 }
 
 .tooltip-inner {
-    background-color: #388F58;
+    background-color: #428bca;
 }
 
 .tooltip.top .tooltip-arrow {
-    border-top-color: #388F58;
+    border-top-color: #428bca;
 }
 
 .tooltip.bottom .tooltip-arrow {
-    border-bottom-color: #388F58;
+    border-bottom-color: #428bca;
 }
 
 .tooltip.right .tooltip-arrow {
-    border-right-color: #388F58;
+    border-right-color: #428bca;
 }
 
 .tooltip.left .tooltip-arrow {
-    border-left-color: #388F58;
+    border-left-color: #428bca;
 }
 
 .datepicker-dialog .btn {
@@ -135,7 +135,7 @@ a:focus {
 }
 
 .datepicker-dialog .btn-info {
-    background-color: #388F58;
+    background-color: #428bca;
     color: white;
     font-weight: 600;
 }
@@ -162,7 +162,7 @@ a:focus {
     height: 20px;
     width: 10px;
     margin: -5px 0 0 -5px;
-    background-color: #388F58;
+    background-color: #428bca;
     z-index: 2;
     display: block;
 }
@@ -201,7 +201,7 @@ a:focus {
 
 .tt-suggestion em {
     font-style: normal;
-    color: #388F58;
+    color: #428bca;
     padding-left: 4px;
 }
 

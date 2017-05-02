@@ -10,10 +10,14 @@
 <div class="container" ng-controller="TimezoneCtrl">
   <div class="header">
     <h1 class="text-muted">Time Scheduler</h1>
+
+    <!--
     <div class="share" hidden>
       <span>Like it?</span>
       <a href="https://twitter.com/share?url=http://timesched.pocoo.org/&amp;text=Schedule+meetings+with+timesched&amp;related=mitsuhiko" class="twitter-share-button" data-lang="en">Tweet</a>
     </div>
+    -->
+
   </div>
 
   <div class="contentwrapper" hidden>
@@ -80,9 +84,10 @@
           </div>
           <div class="clock">
             <div class="clockwrapper" ng-show="isToday && showClocks">
-              <span class="hour">{{ zone.clockHour }}</span><!--
+              <span class="hour">{{ zone.clockHourFormat }}</span><!--
            --><span class="sep">:</span><!--
-           --><span class="minute">{{ zone.clockMinute }}</span>
+           --><span class="minute">{{ zone.clockMinute }}</span><!--
+           --><span class="ampm">{{ zone.clockAMPM }}</span>
               <span class="day">{{ zone.clockDay }}</span>
             </div>
           </div>
@@ -94,6 +99,7 @@
                     daystart: cell.hour == 0,
                     night: cell.hour >= 22 || cell.hour < 6,
                     morning: cell.hour >= 6 && cell.hour < 8,
+                    noon: cell.hour == 12,
                     day: cell.hour >= 8 && cell.hour < 18,
                     evening: cell.hour >= 18 && cell.hour < 22,
                     weekend: cell.isWeekend && markWeekends,
@@ -263,13 +269,15 @@
 <script src="static/app.js"></script>
 <script src="lib/generated/data-compressed.js"></script>
 
+<!--
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-<script>
+-->
+<!-- <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-46285110-1', 'pocoo.org');
   ga('send', 'pageview');
-</script>
+</script> -->
 </html>

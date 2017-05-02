@@ -124,9 +124,9 @@ form.navbar-date-form > div > input {
     top: auto;
     bottom: 0;
     background: rgba(0, 0, 0, 0.1);
-    border-left: 2px solid #388F58;
-    border-right: 2px solid #388F58;
-    border-top: 2px solid #388F58;
+    border-left: 2px solid #428bca;
+    border-right: 2px solid #428bca;
+    border-top: 2px solid #428bca;
 }
 
 .meeting-info {
@@ -193,41 +193,43 @@ form.navbar-date-form > div > input {
 }
 
 .time-list > ul > li div.clock {
-    width: 66px!important;
+    width: 76px!important;
     text-align: right;
     padding: 0;
     display: table-cell;
     vertical-align: middle;
     font-size: 20px;
     line-height: 14px;
+    padding-right: 5px;
 }
 
 .time-list > ul > li div.clock span.hour {
     font-weight: 600;
     display: inline-block;
-    text-align: right;
-    width: 30px;
 }
 
 .time-list > ul > li div.clock span.sep {
     font-weight: 300;
     color: #888;
     display: inline-block;
-    text-align: center;
 }
 
 .time-list > ul > li div.clock span.minute {
     font-weight: 300;
     display: inline-block;
-    text-align: left;
-    width: 30px;
+}
+
+.time-list > ul > li div.clock span.ampm {
+    font-weight: 600;
+    display: inline-block;
+    font-size: 11px;
+    color: #888;
 }
 
 .time-list > ul > li div.clock span.day {
-    width: 66px;
+    width: 76px;
     font-weight: 600;
     display: inline-block;
-    text-align: center;
     font-size: 11px;
     color: #888;
 }
@@ -270,6 +272,10 @@ form.navbar-date-form > div > input {
 .time-list > ul > li div.time-cells table td span.evening {
     background: #999;
     color: white;
+}
+
+.time-list > ul > li div.time-cells table td span.noon {
+    color: #428bca;
 }
 
 .time-list > ul > li div.time-cells table td span.daystart {
