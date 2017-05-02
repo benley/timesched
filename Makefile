@@ -1,29 +1,41 @@
+uglifyjs = uglifyjs
+
 all: compress
 
-compress: lib/generated/data.js
-	node_modules/uglify-js/bin/uglifyjs \
-		lib/jquery.js \
-		lib/jquery-ui.js \
-		lib/angular.js \
-		lib/bootstrap/js/bootstrap.js \
-		lib/sortable.js \
-		lib/slider.js \
-		lib/ui-bootstrap.js \
-		lib/moment.js \
-		lib/moment-timezone.js \
-		lib/typeahead.js \
-			-c > lib/generated/compressed.js
-	node_modules/uglify-js/bin/uglifyjs \
-		lib/generated/data.js \
-		-c > lib/generated/data-compressed.js
+compress: lib/generated/compressed.js lib/generated/data-compressed.js
 
-download-timezone-info:
-	wget https://raw.githubusercontent.com/moment/moment-timezone/develop/data/packed/latest.json -O data/timezones.json
-	wget http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml -O data/windows_zones.xml
-	wget http://unicode.org/repos/cldr/trunk/common/supplemental/supplementalData.xml -O data/supplemental_data.xml
+# The order of these .js input files matters
+lib/generated/compressed.js: lib/jquery.js lib/jquery-ui.js lib/angular.js lib/bootstrap/js/bootstrap.js lib/sortable.js lib/slider.js lib/ui-bootstrap.js lib/moment.js lib/moment-timezone.js lib/typeahead.js
+	$(uglifyjs) $^ -c -o $@
 
-lib/generated/data.js: data/*.json
+lib/generated/data-compressed.js: lib/generated/data.js
+	$(uglifyjs) $^ -c -o $@
+
+download-timezone-info: data/timezones.json data/raw/windows_zones.xml data/raw/supplemental_data.xml data/raw/countryInfo.txt data/raw/cities15000.txt
+
+data/timezones.json:
+	wget -c https://raw.githubusercontent.com/moment/moment-timezone/develop/data/packed/latest.json -O $@
+
+data/raw/windows_zones.xml:
+	wget -c http://unicode.org/repos/cldr/trunk/common/supplemental/windowsZones.xml -O $@
+
+data/raw/supplemental_data.xml:
+	wget -c http://unicode.org/repos/cldr/trunk/common/supplemental/supplementalData.xml -O $@
+
+data/raw/countryInfo.txt:
+	wget -c http://download.geonames.org/export/dump/countryInfo.txt -O $@
+
+data/raw/cities15000.zip:
+	wget -c http://download.geonames.org/export/dump/cities15000.zip -O $@
+
+data/raw/cities15000.txt: data/raw/cities15000.zip
+	unzip -d $(@D) $<
+
+lib/generated/data.js: data/convert.py
+	mkdir -p $(@D)
 	python data/convert.py
+
+data/convert.py: data/timezones.json data/raw/countryInfo.txt data/raw/cities15000.txt
 
 upload:
 	rm -rf _deploy
