@@ -1,0 +1,283 @@
+<!doctype html>
+<html ng-app="timesched">
+<title>Time Scheduler</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="static/main.css">
+<link rel="stylesheet" href="static/theme.css">
+
+<div class="container" ng-controller="TimezoneCtrl">
+  <div class="header">
+    <h1 class="text-muted">Time Scheduler</h1>
+
+    <!--
+    <div class="share" hidden>
+      <span>Like it?</span>
+      <a href="https://twitter.com/share?url=http://timesched.pocoo.org/&amp;text=Schedule+meetings+with+timesched&amp;related=mitsuhiko" class="twitter-share-button" data-lang="en">Tweet</a>
+    </div>
+    -->
+
+  </div>
+
+  <div class="contentwrapper" hidden>
+    <div class="navbar navbar-default navbar-actions" role="navigation">
+      <div class="navbar-collapse collapse">
+        <form class="navbar-form navbar-left navbar-timezone-form"
+            name="zoneform" ng-submit="addInputZone()">
+          <div class="form-group">
+            <input type="text" class="form-control timezone-input"
+              placeholder="Type to add city or timezone"
+              ng-model="currentZone" timezone>
+          </div>
+          <button type="submit" class="btn btn-default"
+            ng-disabled="false" style="display: none">Add</button>
+        </form>
+        <form class="navbar-form navbar-left navbar-date-form">
+          <div class="form-group">
+            <input type="text" class="form-control"
+              datepicker-popup="yyyy-MM-dd" ng-model="day" readonly ng-required="true">
+          </div>
+        </form>
+        <p class="navbar-text navbar-warning-text" ng-show="!isToday">
+          <strong>Reminder:</strong>
+          you're not scheduling for today.
+          <a href="#" ng-click="goToTodayInteractive()">Go to today</a>.
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a ng-click="sortByOffset()">Sort by offset</a></li>
+              <li><a ng-click="sortByName()">Sort by name</a></li>
+              <li><a ng-click="reverse()">Reverse list</a></li>
+              <li><a ng-click="clearList()">Clear list</a></li>
+              <li class="divider">
+              <li><a ng-click="goToToday()">Go to today</a>
+              <li class="divider">
+              <li><a ng-click="toggleMarkWeekends()">{{ markWeekends && 'Hide weekends' || 'Show weekends' }}</a>
+              <li><a ng-click="toggleClocks()" ng-show="isToday">{{ showClocks && 'Hide clocks' || 'Show clocks' }}</a>
+              <li><a ng-click="toggleRestoreTimezones()">{{ restoreTimezones && 'Don\'t restore timezones' || 'Restore timezones' }}</a>
+              <li class="divider">
+              <li><a ng-click="getShortURL()">Get short link</a>
+              <li><a ng-click="showHelp()">Get help</a>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="time-list">
+      <ul ui-sortable="{axis: 'y', handle: 'div.handle', cursor: 'row-resize'}" ng-model="zones">
+        <li ng-repeat="zone in zones" ng-class="{home: zone.isHome}">
+          <div class="handle"></div>
+          <div class="location-info">
+            <h3>{{ zone.homeOffset }} <em
+                tooltip-placement="right"
+                tooltip="{{ zone.timezoneOffsetInfo }}, {{ zone.timezoneName }}">{{ zone.timezoneAbbr }}</em></h3>
+            <div class="dropdown">
+              <a href="#" data-toggle="dropdown">{{ zone.timezoneShortName }}</a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ng-click="setAsHome(zone)" ng-hide="zone.isHome">Set as home</a>
+                <li><a ng-click="removeZone(zone)">Remove</a>
+              </ul>
+            </div>
+          </div>
+          <div class="clock">
+            <div class="clockwrapper" ng-show="isToday && showClocks">
+              <span class="hour">{{ zone.clockHourFormat }}</span><!--
+           --><span class="sep">:</span><!--
+           --><span class="minute">{{ zone.clockMinute }}</span><!--
+           --><span class="ampm">{{ zone.clockAMPM }}</span>
+              <span class="day">{{ zone.clockDay }}</span>
+            </div>
+          </div>
+          <div class="time-cells">
+            <table>
+              <tr>
+                <td ng-repeat="cell in zone.timeCells">
+                  <span class="cell-wrapper" ng-class="{
+                    daystart: cell.hour == 0,
+                    night: cell.hour >= 22 || cell.hour < 6,
+                    morning: cell.hour >= 6 && cell.hour < 8,
+                    noon: cell.hour == 12,
+                    day: cell.hour >= 8 && cell.hour < 18,
+                    evening: cell.hour >= 18 && cell.hour < 22,
+                    weekend: cell.isWeekend && markWeekends,
+                    even: cell.minute == 0
+                    }" tooltip-placement="bottom" tooltip="{{ cell.tooltip }}">
+                    <span class="hour">{{ cell.hourFormat }}</span><span class="sep"
+                      >:</span><span class="minute">{{ cell.minuteFormat }}</span>
+                    <span class="dayinfo" ng-if="cell.hour == 0">
+                      <span class="weekday">{{ cell.weekDayFormat }}</span>
+                      <span class="day">{{ cell.dayFormat }}</span>
+                      <span class="month">{{ cell.monthFormat }}</span>
+                    </span>
+                  </span>
+            </table>
+          </div>
+        </li>
+      </ul>
+      <div class="clock-pointer"><div class="actual-pointer"></div></div>
+      <div class="range-selection" ng-show="zones.length > 0">
+        <div class="action"><input type="checkbox" id="meeting" ng-model="scheduleMeeting">
+          <label for="meeting">Schedule a meeting</label></div>
+        <div ui-slider ng-model="timeRange" ng-show="scheduleMeeting"></div>
+        <pre class="meeting-info" ng-show="scheduleMeeting">{{ meetingSummary }}</pre>
+        <p class="share-links" ng-show="scheduleMeeting">
+          Share this meeting:
+          <a href="#" ng-click="sendMeetingMail()">via e-mail</a>,
+          <a href="#" ng-click="sendMeetingMailViaGMail()">send via gmail</a>,
+          <a href="#" ng-click="addToGoogleCalendar()">add to google calendar</a>,
+          <a href="#" ng-click="getICalFile()">add to desktop calendar</a>,
+          <a href="#" ng-click="tweet()">tweet it</a>,
+          <a href="#" ng-click="getShortURL()">get short link</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading">
+    <p>Loading timezones …
+  </div>
+
+  <div class="footer">
+    <p>
+      &copy; Copyright 2014 by <a href="http://lucumr.pocoo.org/">Armin Ronacher</a>.
+      Proudly BSD licensed.
+      <a href="https://github.com/mitsuhiko/timesched">Fork me on github</a>.
+  </div>
+</div>
+
+<div class="modal fade" id="short-url-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Short URL Generated</h4>
+      </div>
+      <div class="modal-body">
+        <p>A short URL for this page was generated:
+        <p class="short-url"><input onclick="this.select()" type="text" class="form-control" readonly>
+        <p>
+          You can share this URL with other people and they will see the same
+          page as you.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Time Scheduler Help</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          This application allows you to schedule meetings in different timezones around
+          the world.  It knows about most large cities and timezones in the world.
+        <h3>How to Add Timezones</h3>
+        <p>
+          Enter the name of the city you want to add to the top left input box and an
+          auto complete should appear to help you add it.  Note that some cities might
+          have slightly different names to what you expect as all cities have latin
+          transcribed names here for ease of input.  For instance it's “Nuernberg” instead
+          of “Nürnberg”.
+        <h3>Why Cities and not Timezones?</h3>
+        <p>
+          The application supports most timezones in the world but it's recommended to use
+          cities instead because that will give you more accurate information.  For
+          instance if you pick arabic cities the weekends will be adjusted accordingly
+          based on local rules.
+        <h3>What are the Colors?</h3>
+        <p>
+          The darker the colors the more into the night it goes.  Red means weekends.  Note
+          that weekends are country specific.  If you just select a timezone but not a
+          city the weekends will be generic (Saturday and Sunday).
+        <h3>Can I schedule less than 15 Minute Intervals?</h3>
+        <p>
+          Yes you can, if you hold alt or shift down and it lets you select in
+          5 minute intervals.
+        <h3>How do I remove a timezone?</h3>
+        <p>
+          To remove a timezone (or to set it as home timezone) you can use click on the
+          name of the timezone which will open a drop-down menu.  It contains a link to
+          remove the timezone as well as to make it the home timezone.
+        <h3>A Timzone is Wrong</h3>
+        <p>
+          The timezones are not defined by this application but pulled from official sources.
+          It can however happen that the version here lags behind.
+          <a href="mailto:armin.ronacher@active-4.com">Contact the
+          developer</a> if something is wrong.
+        <h3>Who Made This?</h3>
+        <p>
+          This application was written by Armin Ronacher for a person very dear to his
+          heart after a similar service started charging for this functionality.
+          <a href="mailto:armin.ronacher@active-4.com">Contact him</a> for feedback.
+        <h3>Can I Get the Sourcecode?</h3>
+        <p>
+          Yes, the sourcecode is available on github:
+          <a href="https://github.com/mitsuhiko/timesched">mitsuhiko/timesched</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Got it</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="template/datepicker/datepicker.html" type="text/ng-template">
+  <table>
+    <thead>
+      <tr class="text-center">
+        <th><button type="button" class="btn pull-left"
+          ng-click="move(-1)"><i class="glyphicon glyphicon-chevron-left"></i></button></th>
+        <th colspan="{{ rows[0].length - 2 + showWeekNumbers }}"><button type="button" class="btn btn-block" ng-click="toggleMode()"><strong>{{ title }}</strong></button></th>
+        <th><button type="button" class="btn pull-right" ng-click="move(1)"><i class="glyphicon glyphicon-chevron-right"></i></button></th>
+      </tr>
+      <tr class="text-center" ng-show="labels.length > 0">
+        <th ng-show="showWeekNumbers">#</th>
+        <th ng-repeat="label in labels">{{ label }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="row in rows">
+        <td ng-show="showWeekNumbers" class="text-center"><em>{{ getWeekNumber(row) }}</em></td>
+        <td ng-repeat="dt in row" class="text-center">
+          <button type="button" style="width:100%;" class="btn" ng-class="{'btn-info': dt.selected}" ng-click="select(dt.date)" ng-disabled="dt.disabled"><span ng-class="{muted: dt.secondary}">{{ dt.label }}</span></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+
+<script id="template/datepicker/popup.html" type="text/ng-template">
+  <ul class="dropdown-menu datepicker-dialog" ng-style="{display: (isOpen && 'block') || 'none', top: position.top+'px', left: position.left+'px'}">
+    <li ng-transclude></li>
+    <li ng-show="true" style="padding:10px 9px 2px">
+      <span class="btn-group">
+        <button type="button" class="btn btn-small btn-inverse" ng-click="$parent.goToTodayInteractive()">{{ currentText }}</button>
+      </span>
+    </li>
+  </ul>
+</script>
+
+<script src="lib/generated/compressed.js"></script>
+<script src="static/app.js"></script>
+<script src="lib/generated/data-compressed.js"></script>
+
+<!--
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+-->
+<!-- <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-46285110-1', 'pocoo.org');
+  ga('send', 'pageview');
+</script> -->
+</html>

@@ -1,0 +1,407 @@
+/* overall */
+body {
+    margin: 0;
+    padding: 30px 20px;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+/* header */
+div.header {
+    position: relative;
+}
+
+div.header h1 {
+    font-size: 3em;
+    color: black;
+}
+
+.share {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.share * {
+    vertical-align: middle;
+}
+
+.share > span {
+    padding-right: 10px;
+}
+
+/* footer */
+div.footer {
+    margin-top: 15px;
+    color: #888;
+    text-align: center;
+    font-size: 0.85em;
+}
+
+/* navbar */
+div.navbar-actions {
+    margin: 25px 0;
+}
+
+form.navbar-timezone-form {
+    padding: 0;
+}
+
+form.navbar-timezone-form .timezone-input {
+    width: 284px;
+}
+
+form.navbar-timezone-form .tt-dropdown-menu {
+    width: 398px;
+}
+
+form.navbar-date-form {
+    padding: 0 0 0 4px;
+}
+
+form.navbar-date-form > div > input {
+    width: 110px;
+    text-align: center;
+    cursor: pointer!important;
+}
+
+.navbar-warning-text {
+    font-size: 13px;
+    color: #D3F2DF;
+}
+
+/* clock pointer */
+.clock-pointer {
+    position: relative;
+    background: blue;
+    width: 624px;
+    float: right;
+    margin-right: 5px;
+}
+
+.clock-pointer > .actual-pointer {
+    position: absolute;
+    bottom: 0;
+    width: 3px;
+    margin-left: -1px;
+    background: #d00;
+    opacity: 0.7;
+}
+
+/* time selection */
+.range-selection {
+    margin: 15px 0;
+    padding: 0 0 10px 0;
+    min-height: 40px;
+}
+
+.range-selection > .action {
+    float: left;
+    margin: 0;
+    padding: 0;
+    height: 35px;
+}
+
+.range-selection .ui-slider {
+    margin: 0 4px 0 0;
+    width: 624px;
+    float: right;
+}
+
+.range-selection .ui-slider-range {
+    pointer-events: none;
+    top: auto;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    border-left: 2px solid #428bca;
+    border-right: 2px solid #428bca;
+    border-top: 2px solid #428bca;
+}
+
+.meeting-info {
+    clear: both;
+    font-size: 13px;
+    margin: 0 10px;
+    font-size: 12px;
+}
+
+.range-selection .share-links {
+    margin: 10px;
+}
+
+/* time list */
+.time-list > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.time-list > ul > li {
+    padding: 4px;
+    display: table;
+    width: 100%;
+    background: white;
+}
+
+.time-list > ul > li div.handle {
+    width: 6px!important;
+    background: #ccc;
+    height: 42px;
+    cursor: pointer;
+}
+
+.time-list > ul > li div.location-info {
+    display: table-cell;
+    vertical-align: top;
+    line-height: 0.85;
+    width: 215px;
+}
+
+.time-list > ul > li div.location-info .dropdown > a {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.time-list > ul > li div.location-info h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.time-list > ul > li div.location-info h3 em {
+    font-size: 12px;
+    font-weight: 400;
+    color: #888;
+}
+
+.time-list > ul > li.home {
+    background: linear-gradient(to bottom, #efefef 0%,#fafafa 100%);
+}
+
+.time-list > ul > li.home div.location-info h3 {
+    font-weight: 600;
+}
+
+.time-list > ul > li div.clock {
+    width: 76px!important;
+    text-align: right;
+    padding: 0;
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 20px;
+    line-height: 14px;
+    padding-right: 5px;
+}
+
+.time-list > ul > li div.clock span.hour {
+    font-weight: 600;
+    display: inline-block;
+}
+
+.time-list > ul > li div.clock span.sep {
+    font-weight: 300;
+    color: #888;
+    display: inline-block;
+}
+
+.time-list > ul > li div.clock span.minute {
+    font-weight: 300;
+    display: inline-block;
+}
+
+.time-list > ul > li div.clock span.ampm {
+    font-weight: 600;
+    display: inline-block;
+    font-size: 11px;
+    color: #888;
+}
+
+.time-list > ul > li div.clock span.day {
+    width: 76px;
+    font-weight: 600;
+    display: inline-block;
+    font-size: 11px;
+    color: #888;
+}
+
+.time-list > ul > li div.time-cells {
+    display: table-cell;
+    width: 600px;
+}
+
+.time-list > ul > li div.time-cells table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+.time-list > ul > li div.time-cells table td {
+    text-align: center;
+    padding: 0 1px!important;
+    margin: 0!important;
+    border: 0!important;
+    width: 24px!important;
+}
+
+.time-list > ul > li div.time-cells table td span.cell-wrapper {
+    background: #eee;
+    display: block;
+    cursor: pointer;
+    height: 42px;
+    width: 24px!important;
+    margin: 0!important;
+    padding: 0!important;
+}
+
+.time-list > ul > li div.time-cells table td span.night {
+    background: #666;
+    color: white;0
+}
+
+.time-list > ul > li div.time-cells table td span.morning,
+.time-list > ul > li div.time-cells table td span.evening {
+    background: #999;
+    color: white;
+}
+
+.time-list > ul > li div.time-cells table td span.noon {
+    color: #428bca;
+}
+
+.time-list > ul > li div.time-cells table td span.daystart {
+    background: #333;
+    color: white;
+}
+
+.time-list > ul > li div.time-cells table td span.day.weekend {
+    background: #F2CECE;
+}
+
+.time-list > ul > li div.time-cells table td span.night.weekend {
+    background: #803232;
+}
+
+.time-list > ul > li div.time-cells table td span.morning.weekend,
+.time-list > ul > li div.time-cells table td span.evening.weekend {
+    background: #BA5B5B;
+}
+
+.time-list > ul > li div.time-cells table td span.daystart.weekend {
+    background: #360808;
+}
+
+.time-list > ul > li div.time-cells table td span.hour {
+    font-weight: 600;
+    font-size: 17px;
+    display: block;
+}
+
+.time-list > ul > li div.time-cells table td span.minute {
+    display: block;
+    font-size: 12px;
+}
+
+.time-list > ul > li div.time-cells table td span.sep {
+    display: none;
+}
+
+.time-list > ul > li div.time-cells table .even span.hour {
+    padding-top: 8px;
+}
+
+.time-list > ul > li div.time-cells table .even span.minute {
+    display: none;
+}
+
+.time-list > ul > li div.time-cells table .daystart span.hour,
+.time-list > ul > li div.time-cells table .daystart span.minute {
+    display: none;
+}
+
+.time-list > ul > li div.time-cells table .daystart span.dayinfo {
+    display: block;
+    padding-top: 2px;
+    line-height: 1.0;
+}
+
+.time-list > ul > li div.time-cells table .daystart span.dayinfo > span {
+    font-family: 'Open Sans Condensed', sans-serif!important;
+    font-size: 12px;
+    font-weight: 300;
+    display: block;
+    text-transform: uppercase;
+}
+
+.time-list > ul > li div.time-cells table .daystart span.dayinfo > span.day {
+    font-weight: 700;
+}
+
+.time-list > ul > li div.time-cells table .daystart span.dayinfo > span.weekday {
+    opacity: 0.5;
+}
+
+.loading p {
+    margin: 25px 0;
+    font-size: 18px;
+}
+
+/* fixes */
+ul.dropdown-menu a {
+    cursor: pointer!important;
+}
+
+.tooltip-inner {
+    max-width: 300px;
+}
+
+.datepicker-dialog {
+    padding: 10px;
+}
+
+.datepicker-dialog table tr th {
+    text-align: center;
+    padding-top: 7px;
+}
+
+.datepicker-dialog table tr span.muted {
+    color: #bbb;
+}
+
+input:focus, input:active, label {
+    outline: none!important;
+}
+
+label {
+    user-select: none;
+    -moz-user-select: none;
+}
+
+/* url share dialog */
+#short-url-modal .modal-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 180px;
+    margin-top: -180px;
+    margin-left: -300px;
+}
+
+#short-url-modal .modal-dialog .short-url > input {
+    border: 1px solid #ccc;
+    color: #222;
+}
+
+#help-modal .modal-dialog {
+    padding: 30px 0;
+}
