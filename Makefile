@@ -1,6 +1,6 @@
 uglifyjs = uglifyjs
 
-all: compress
+all: build
 
 compress: lib/generated/compressed.js lib/generated/data-compressed.js
 
@@ -37,13 +37,17 @@ lib/generated/data.js: data/convert.py
 
 data/convert.py: data/timezones.json data/raw/countryInfo.txt data/raw/cities15000.txt
 
-upload:
-	rm -rf _deploy
-	mkdir _deploy
+build: compress timesched.html
+	mkdir -p _deploy
 	cp timesched.html _deploy/index.html
-	cp -R lib _deploy
-	cp -R static _deploy
+	cp -R lib _deploy/
+	cp -R static _deploy/static/
+
+deploy: build
 	rsync -a _deploy/ flow.srv.pocoo.org:/srv/websites/timesched.pocoo.org/static
 	rm -rf _deploy
 
-.PHONY: compress download-timezone-info upload
+clean:
+	rm -rf _deploy
+
+.PHONY: build compress download-timezone-info upload
